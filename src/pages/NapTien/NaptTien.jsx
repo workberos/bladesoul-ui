@@ -14,7 +14,7 @@ const BankTransfer = () => {
 
   const bankInfo = [
     { label: 'Tên ngân hàng', value: 'Vietcombank' },
-    { label: 'Số tài khoản', value: '6666' },
+    { label: 'Số tài khoản', value: '666' },
     { label: 'Chủ tài khoản', value: 'Nguyen Van Binh' },
     { label: 'Nội dung chuyển tiền', value: 'GWw3p4q3b18c2jjWG' }
   ];
@@ -24,7 +24,7 @@ const BankTransfer = () => {
     const baseUrl = 'https://api.qrserver.com/v1/create-qr-code/';
     const qrData = {
       bank: 'Vietcombank',
-      account: '6666',
+      account: '666',
       name: 'Nguyen Van Binh',
       amount: amount,
       content: 'GWw3p4q3b18c2jjWG'
@@ -48,6 +48,13 @@ const BankTransfer = () => {
 
   return (
     <div className="bank-transfer-container">
+      <div className="balance-info">
+        <div className="balance-details">
+          <span className="balance-label">Số dư: <span className="balance-amount">1,250,000đ</span></span>
+          
+        </div>
+      </div>
+      
       <div className="transfer-layout">
         {/* Cột bên trái - Thông tin chuyển khoản */}
         <div className="transfer-column left-column">
@@ -128,4 +135,4 @@ const BankTransfer = () => {
   );
 };
 
-export default BankTransfer;
+export default BankTransfer
