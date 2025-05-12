@@ -14,8 +14,8 @@ const BankTransfer = () => {
 
   const bankInfo = [
     { label: 'Tên ngân hàng', value: 'Vietcombank' },
-    { label: 'Số tài khoản', value: '9979566666' },
-    { label: 'Chủ tài khoản', value: 'Dao Van Quan' },
+    { label: 'Số tài khoản', value: '6666' },
+    { label: 'Chủ tài khoản', value: 'Nguyen Van Binh' },
     { label: 'Nội dung chuyển tiền', value: 'GWw3p4q3b18c2jjWG' }
   ];
   
@@ -24,8 +24,8 @@ const BankTransfer = () => {
     const baseUrl = 'https://api.qrserver.com/v1/create-qr-code/';
     const qrData = {
       bank: 'Vietcombank',
-      account: '9979566666',
-      name: 'Dao Van Quan',
+      account: '6666',
+      name: 'Nguyen Van Binh',
       amount: amount,
       content: 'GWw3p4q3b18c2jjWG'
     };
