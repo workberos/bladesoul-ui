@@ -1,18 +1,20 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import * as userServices from "../../services/userSevices";
+// import * as userServices from "../../services/userSevices";
 import './style.css';
 
 const DangKy = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    pass2: ''
   });
   const [errors, setErrors] = useState({
     username: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    pass2: ''
   });
   const navigate = useNavigate();
 
@@ -26,7 +28,7 @@ const DangKy = () => {
       ...formData,
       [name]: value
     });
-    
+
     // Clear error when user types
     if (errors[name]) {
       setErrors({
@@ -41,7 +43,8 @@ const DangKy = () => {
     const newErrors = {
       username: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      pass2: ''
     };
 
     // Validate username
@@ -67,6 +70,13 @@ const DangKy = () => {
       newErrors.confirmPassword = 'Mật khẩu không khớp';
       valid = false;
     }
+    if (!formData.pass2) {
+      newErrors.pass2 = 'Vui lòng nhập mật khẩu cấp 2';
+      valid = false;
+    } else if (!PASSWORD_REGEX.test(formData.pass2)) {
+      newErrors.pass2 = 'Mật khẩu cấp 2 phải có ít nhất 6 ký tự';
+      valid = false;
+    }
 
     setErrors(newErrors);
     return valid;
@@ -74,9 +84,9 @@ const DangKy = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
-      const result = await userServices.registerUser(formData);
+      // const result = await userServices.registerUser(formData);
       // Xử lý đăng ký thành công
       alert(`Đăng ký thành công với tài khoản: ${formData.username}`);
       navigate('/');
@@ -127,6 +137,19 @@ const DangKy = () => {
               className={errors.confirmPassword ? 'error' : ''}
             />
             {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
+          </div>
+
+          <div className="form-group">
+            <label>Mật khẩu cấp 2</label>
+            <input
+              type="password"
+              name="pass2" // Fixed here
+              placeholder="Nhập mật khẩu cấp 2"
+              value={formData.pass2}
+              onChange={handleChange}
+              className={errors.pass2 ? 'error' : ''}
+            />
+            {errors.pass2 && <span className="error-message">{errors.pass2}</span>}
           </div>
 
           <div className="divider"></div>

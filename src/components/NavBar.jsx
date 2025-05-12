@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import '../assets/css/Navbar.css'
+import { useState } from "react";
 
 const Navbar = () => {
+  const {isLoggin, setIsLoggin} = useState(false);
   return (
     <nav className="game-navbar">
       <div className="navbar-brand">
@@ -22,6 +24,10 @@ const Navbar = () => {
         </Link>
         <Link to="/ho-tro" className="nav-link">
           <span className="link-text">Hỗ trợ</span>
+          <span className="link-underline"></span>
+        </Link>
+        <Link to="/dang-nhap" className="nav-link">
+          <span className="link-text">{!isLoggin? "Đăng nhập" : "Chào, bạn"}</span>
           <span className="link-underline"></span>
         </Link>
         <div className="nav-link download-btn" onClick={() => alert("Bắt đầu tải game...")}>
