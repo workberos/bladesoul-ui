@@ -1,7 +1,7 @@
 /* Các style hiện có giữ nguyên, thêm các style sau */
 
 .dangky-container {
-  max-width: 400px;
+  width: 500px;
   margin: 0 auto;
   padding: 2rem;
   background-color: white;
