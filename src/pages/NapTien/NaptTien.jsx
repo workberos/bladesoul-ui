@@ -7,7 +7,7 @@ import { GiCrossedSwords, GiDragonHead, GiScrollUnfurled, GiCoins } from "react-
 import QRCode from "react-qr-code"
 import "./style.css"
 
-const BankTransfer = () => {
+const NapTien = () => {
   const [selectedAmount, setSelectedAmount] = useState(10000)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [copiedField, setCopiedField] = useState(null)
@@ -521,4 +521,4 @@ const BankTransfer = () => {
   )
 }
 
-export default BankTransfer
+export default NapTien
