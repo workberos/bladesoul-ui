@@ -1,822 +1,678 @@
-.bank-transfer-container {
-    max-width: 800px;
-    margin: 0 auto;
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    color: #333;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
-
-/* Phần số dư */
-.balance-info {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    z-index: 10;
-}
-
-.balance-details {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.balance-label {
-    font-size: 16px;
-    font-weight: bold;
-    color: #666;
-}
-
-.balance-amount {
-    font-size: 16px;
-    color: #d8273f;
-    margin-bottom: 5px;
-}
-
-/* Bố cục hai cột dạng grid */
-.transfer-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
-    margin-top: 40px;
-    /* Tăng khoảng cách để tránh chồng lấn với phần số dư */
-}
-
-.transfer-column {
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-}
-
-.left-column {
-    /* Cột trái - Thông tin chuyển khoản */
-}
-
-.right-column {
-    /* Cột phải - QR code */
-    display: flex;
-    flex-direction: column;
-}
-
-h2 {
-    color: #2c3e50;
-    font-size: 18px;
-    margin-bottom: 15px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-}
-
-h3 {
-    color: #2c3e50;
-    font-size: 16px;
-    text-align: center;
-    margin: 10px 0;
-}
-
-.bank-info-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.bank-info-table tr {
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.bank-info-table td {
-    padding: 12px 8px;
-    vertical-align: middle;
-}
-
-.info-label {
-    font-weight: bold;
-    width: 40%;
-    color: #555;
-}
-
-.copyable-field {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.copyable-text {
-    margin-right: 4px;
-    padding: 4px 8px;
-    background-color: #f5f5f5;
-    border-radius: 4px;
-    font-family: monospace;
-    flex-grow: 1;
-}
-
-.copy-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #666;
-    padding: 4px;
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    transition: all 0.2s;
-}
-
-.copy-button:hover {
-    color: #1a73e8;
-    transform: scale(1.1);
-}
-
-.copy-icon {
-    font-size: 14px;
-}
-
-.copied-tooltip {
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: white;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    z-index: 10;
-    animation: fadeIn 0.2s;
-}
-
-.copied-tooltip::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 5px 5px 0;
-    border-style: solid;
-    border-color: #333 transparent transparent;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        top: -25px;
-    }
-
-    to {
-        opacity: 1;
-        top: -30px;
-    }
-}
-
-.amount-selector {
-    position: relative;
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-.amount-dropdown-toggle {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
-    transition: all 0.2s;
-}
-
-.amount-dropdown-toggle:hover {
-    border-color: #1a73e8;
-}
-
-.dropdown-icon {
-    font-size: 12px;
-    color: #666;
-}
-
-.amount-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    animation: fadeInDropdown 0.2s;
-}
-
-@keyframes fadeInDropdown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.dropdown-option {
-    padding: 12px 15px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.dropdown-option:hover {
-    background-color: #f0f0f0;
-}
-
-.dropdown-option.selected {
-    background-color: #e6f7ff;
-    color: #1a73e8;
-}
-
-.qr-transfer-section {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.qr-code-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;
-    margin: 15px 0;
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 15px;
-}
-
-.qr-code-image {
-    width: 200px;
-    height: 200px;
-    border: 1px solid #eee;
-    background-color: white;
-    padding: 10px;
-}
-
-.amount-display {
-    font-weight: bold;
-    margin-top: 10px;
-    font-size: 16px;
-    color: #2c3e50;
-}
-
-.divider {
-    border-top: 1px solid #e0e0e0;
-    margin: 20px 0;
-}
-
-.bank-info-footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 4px;
-}
-
-.napas-info {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #2c3e50;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .transfer-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .balance-info {
-        position: static;
-        text-align: center;
-        margin-bottom: 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .bank-transfer-container {
-        padding: 15px;
-    }
-
-    .bank-info-table td {
-        padding: 8px 4px;
-        font-size: 14px;
-    }
-
-    .qr-code-image {
-        width: 180px;
-        height: 180px;
-    }
-
-    .balance-amount {
-        font-size: 18px;
-    }
-}
-
-.bank-transfer-container {
-    max-width: 800px;
-    margin: 0 auto;
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    color: #333;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Bố cục hai cột dạng grid */
-.transfer-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.transfer-column {
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-}
-
-.left-column {
-    /* Cột trái - Thông tin chuyển khoản */
-}
-
-.right-column {
-    /* Cột phải - QR code */
-    display: flex;
-    flex-direction: column;
-}
-
-h2 {
-    color: #2c3e50;
-    font-size: 18px;
-    margin-bottom: 15px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-}
-
-h3 {
-    color: #2c3e50;
-    font-size: 16px;
-    text-align: center;
-    margin: 10px 0;
-}
-
-.bank-info-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.bank-info-table tr {
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.bank-info-table td {
-    padding: 12px 8px;
-    vertical-align: middle;
-}
-
-.info-label {
-    font-weight: bold;
-    width: 40%;
-    color: #555;
-}
-
-.copyable-field {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.copyable-text {
-    margin-right: 4px;
-    padding: 4px 8px;
-    background-color: #f5f5f5;
-    border-radius: 4px;
-    font-family: monospace;
-    flex-grow: 1;
-}
-
-.copy-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #666;
-    padding: 4px;
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    transition: all 0.2s;
-}
-
-.copy-button:hover {
-    color: #1a73e8;
-    transform: scale(1.1);
-}
-
-.copy-icon {
-    font-size: 14px;
-}
-
-.copied-tooltip {
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: white;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    z-index: 10;
-    animation: fadeIn 0.2s;
-}
-
-.copied-tooltip::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 5px 5px 0;
-    border-style: solid;
-    border-color: #333 transparent transparent;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        top: -25px;
-    }
-
-    to {
-        opacity: 1;
-        top: -30px;
-    }
-}
-
-.amount-selector {
-    position: relative;
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-.amount-dropdown-toggle {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
-    transition: all 0.2s;
-}
-
-.amount-dropdown-toggle:hover {
-    border-color: #1a73e8;
-}
-
-.dropdown-icon {
-    font-size: 12px;
-    color: #666;
-}
-
-.amount-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    animation: fadeInDropdown 0.2s;
-}
-
-@keyframes fadeInDropdown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.dropdown-option {
-    padding: 12px 15px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.dropdown-option:hover {
-    background-color: #f0f0f0;
-}
-
-.dropdown-option.selected {
-    background-color: #e6f7ff;
-    color: #1a73e8;
-}
-
-.qr-transfer-section {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.qr-code-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;
-    margin: 15px 0;
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 15px;
-}
-
-.qr-code-image {
-    width: 200px;
-    height: 200px;
-    border: 1px solid #eee;
-    background-color: white;
-    padding: 10px;
-}
-
-.amount-display {
-    font-weight: bold;
-    margin-top: 10px;
-    font-size: 16px;
-    color: #2c3e50;
-}
-
-.divider {
-    border-top: 1px solid #e0e0e0;
-    margin: 20px 0;
-}
-
-.bank-info-footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 4px;
-}
-
-.napas-info {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #2c3e50;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .transfer-layout {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-    .bank-transfer-container {
-        padding: 15px;
-    }
-
-    .bank-info-table td {
-        padding: 8px 4px;
-        font-size: 14px;
-    }
-
-    .qr-code-image {
-        width: 180px;
-        height: 180px;
-    }
-}
-
-/* BankTransfer custom CSS (no tailwind) */
-.banktransfer-outer {
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --primary-color: #ff073a;
+  --secondary-color: #0ff0fc;
+  --accent-color: #7a04eb;
+  --success-color: #39ff14;
+  --warning-color: #ffbe0b;
+  --danger-color: #ff5400;
+  --text-color: #ffffff;
+  --dark-bg: #0a0a0a;
+  --card-bg: rgba(20, 20, 20, 0.8);
+  --card-hover: rgba(30, 30, 30, 0.9);
+  --border-color: rgba(255, 7, 58, 0.5);
+  --shadow: 0 0 15px rgba(255, 7, 58, 0.5);
+  --glow: 0 0 10px rgba(15, 240, 252, 0.7);
+  --transition: all 0.3s ease;
+  --border-radius: 5px;
+  --gold-color: #ffcc00;
+  --gold-glow: 0 0 15px rgba(255, 204, 0, 0.7);
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+}
+
+/* Main Container */
+.bns-outer {
+  position: relative;
+  min-height: 100vh;
   display: flex;
+  align-items: center;
   justify-content: center;
-  width: 100%;
-  padding: 16px;
-  background: #f5f6fa;
+  padding: 2rem;
+  font-family: "Rajdhani", sans-serif;
+  color: var(--text-color);
+  overflow: hidden;
 }
-.banktransfer-container {
-  max-width: 900px;
+
+.bns-background {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-  padding: 32px 24px;
-  position: relative;
-  opacity: 0;
+  height: 100%;
+  background: url("/placeholder.svg?height=1080&width=1920") center / cover no-repeat;
+  background-color: var(--dark-bg);
+  z-index: -2;
+  filter: brightness(0.4) saturate(1.2);
 }
-.banktransfer-balance {
+
+.bns-background::before {
+  content: "";
   position: absolute;
-  top: 24px;
-  left: 24px;
-  z-index: 10;
-}
-.banktransfer-balance-label {
-  font-size: 16px;
-  font-weight: bold;
-  color: #444;
-}
-.banktransfer-balance-amount {
-  color: #e53e3e;
-}
-.banktransfer-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  margin-top: 64px;
-}
-@media (max-width: 900px) {
-  .banktransfer-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    margin-top: 40px;
-  }
-}
-.banktransfer-left, .banktransfer-right {
-  background: #f8fafc;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  padding: 24px;
-}
-.banktransfer-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #222;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #e2e8f0;
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-}
-.banktransfer-title-icon {
-  margin-right: 8px;
-  font-size: 22px;
-}
-.banktransfer-table {
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(10, 10, 20, 0.5), rgba(10, 10, 20, 0.9));
 }
-.banktransfer-table-row {
-  border-bottom: 1px solid #e2e8f0;
+
+/* Particles */
+.bns-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
 }
-.banktransfer-table-label {
-  padding: 12px 0;
-  font-weight: 500;
-  color: #444;
-  width: 40%;
-}
-.banktransfer-copyable-field {
-  display: flex;
-  align-items: center;
-}
-.banktransfer-copyable-text {
-  background: #f1f5f9;
-  border-radius: 4px;
-  padding: 4px 10px;
-  font-family: monospace;
-  margin-right: 8px;
-  flex-grow: 1;
-}
-.banktransfer-copy-btn {
-  color: #555;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 2px 4px;
-  position: relative;
-  transition: color 0.2s, transform 0.2s;
-}
-.banktransfer-copy-btn:hover {
-  color: #2563eb;
-  transform: scale(1.1);
-}
-.banktransfer-copied-tooltip {
+
+.bns-particle {
   position: absolute;
-  top: -32px;
+  border-radius: 50%;
+  background-color: var(--gold-color);
+  box-shadow: 0 0 10px var(--gold-color);
+}
+
+/* Glow Effect */
+.bns-glow {
+  position: fixed;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  background: #222;
-  color: #fff;
-  font-size: 12px;
-  padding: 3px 10px;
-  border-radius: 4px;
-  white-space: nowrap;
-  z-index: 20;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, rgba(255, 204, 0, 0.1), transparent 70%);
+  z-index: -1;
+  pointer-events: none;
 }
-.banktransfer-amount-selector {
-  margin-bottom: 24px;
+
+/* Main Container */
+.bns-container {
   position: relative;
+  width: 100%;
+  max-width: 1000px;
+  background: rgba(10, 10, 10, 0.85);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: var(--shadow), 0 0 20px rgba(255, 204, 0, 0.2);
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
 }
-.banktransfer-amount-dropdown-toggle {
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  padding: 10px 16px;
-  background: #fff;
+
+.bns-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("/placeholder.svg?height=500&width=1000") center / cover no-repeat;
+  opacity: 0.05;
+  z-index: -1;
+}
+
+/* Header */
+.bns-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  transition: border 0.2s;
+  margin-bottom: 2rem;
 }
-.banktransfer-amount-dropdown-toggle:hover {
-  border: 1.5px solid #2563eb;
+
+.bns-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-.banktransfer-amount-dropdown {
+
+.bns-logo-icon {
+  font-size: 2rem;
+  color: var(--primary-color);
+  filter: drop-shadow(0 0 5px var(--primary-color));
+}
+
+.bns-logo h1 {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-shadow: 0 0 10px rgba(255, 7, 58, 0.5);
+  letter-spacing: 1px;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.bns-balance {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(30, 30, 30, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+}
+
+.bns-balance-icon {
+  color: var(--gold-color);
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 3px var(--gold-color));
+}
+
+.bns-balance-label {
+  font-size: 0.9rem;
+}
+
+.bns-balance-amount {
+  font-weight: 700;
+  color: var(--gold-color);
+}
+
+/* Title Bar */
+.bns-title-bar {
+  position: relative;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.bns-title-bar h2 {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-shadow: 0 0 10px rgba(255, 7, 58, 0.5);
+  letter-spacing: 2px;
+  margin: 0;
+  padding: 0.5rem 0;
+  text-transform: uppercase;
+}
+
+.bns-title-decoration {
   position: absolute;
-  top: 110%;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+}
+
+.bns-title-decoration::before,
+.bns-title-decoration::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.bns-title-decoration::before {
   left: 0;
+}
+
+.bns-title-decoration::after {
   right: 0;
-  background: #fff;
-  border: 1px solid #d1d5db;
+}
+
+/* Grid Layout */
+.bns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Section Titles */
+.bns-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.3rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 7, 58, 0.3);
+  text-transform: uppercase;
+}
+
+.bns-title-icon {
+  color: var(--primary-color);
+}
+
+/* Left Column - Bank Info */
+.bns-table-container {
+  background: rgba(30, 30, 30, 0.6);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
-  z-index: 10;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
-.banktransfer-dropdown-option {
-  padding: 12px 18px;
+
+.bns-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bns-table-row {
+  transition: var(--transition);
+}
+
+.bns-table-row td {
+  padding: 0.8rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 7, 58, 0.1);
+}
+
+.bns-table-row:last-child td {
+  border-bottom: none;
+}
+
+.bns-table-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(240, 240, 240, 0.8);
+  font-weight: 500;
+}
+
+.bns-label-icon {
+  color: var(--gold-color);
+  filter: drop-shadow(0 0 3px var(--gold-color));
+}
+
+.bns-copyable-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bns-copyable-text {
+  font-weight: 600;
+  color: var(--gold-color);
+}
+
+.bns-copy-btn {
+  background: none;
+  border: none;
+  color: rgba(240, 240, 240, 0.6);
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  padding: 0.3rem;
+  border-radius: 4px;
+  transition: var(--transition);
+  position: relative;
 }
-.banktransfer-dropdown-option.selected, .banktransfer-dropdown-option:hover {
-  background: #e0e7ff;
-  color: #2563eb;
+
+.bns-copy-btn:hover {
+  color: var(--gold-color);
+  background: rgba(255, 204, 0, 0.1);
 }
-.banktransfer-qr-container {
+
+.bns-copied-tooltip {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  background: var(--gold-color);
+  color: var(--dark-bg);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  transform-origin: bottom right;
+}
+
+.bns-copied-tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  right: 8px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--gold-color);
+}
+
+.bns-note {
+  background: rgba(255, 7, 58, 0.1);
+  border-left: 3px solid var(--primary-color);
+  padding: 0.8rem;
+  font-size: 0.9rem;
+  color: rgba(240, 240, 240, 0.9);
+}
+
+/* Right Column - QR Code */
+.bns-amount-selector {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.bns-amount-dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(30, 30, 30, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.bns-amount-dropdown-toggle:hover {
+  background: rgba(255, 7, 58, 0.2);
+  border-color: var(--primary-color);
+}
+
+.bns-amount-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  z-index: 10;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.bns-dropdown-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.bns-dropdown-option.selected {
+  background: rgba(255, 7, 58, 0.2);
+  color: var(--gold-color);
+}
+
+.bns-gem-amount {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--gold-color);
+  font-weight: 600;
+}
+
+.bns-qr-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
+}
+
+.bns-qr-code {
+  position: relative;
+  padding: 1rem;
+  background: rgba(10, 10, 10, 0.7);
+  border-radius: 8px;
+}
+
+.bns-qr-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--gold-color);
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
+  pointer-events: none;
+}
+
+.bns-amount-display {
+  text-align: center;
+}
+
+.bns-amount-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gold-color);
+  margin: 0;
+}
+
+.bns-gem-value {
+  display: flex;
+  align-items: center;
   justify-content: center;
-  background: #fff;
-  border-radius: 8px;
-  padding: 18px 0 0 0;
+  gap: 0.3rem;
+  font-size: 1.1rem;
+  color: var(--gold-color);
+  margin: 0.3rem 0 0;
 }
-.banktransfer-qr-code {
-  padding: 12px;
-  border: 1px solid #e2e8f0;
-  background: #fff;
-  border-radius: 8px;
+
+/* Rewards Box */
+.rewards-box {
+  background: linear-gradient(135deg, rgba(122, 4, 235, 0.3), rgba(255, 7, 58, 0.3));
+  border: 1px solid var(--accent-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-lg);
 }
-.banktransfer-amount-display {
+
+.rewards-box h4 {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--gold-color);
+  margin-bottom: var(--spacing-sm);
+  text-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+}
+
+.rewards-box ul {
+  list-style: none;
+}
+
+.rewards-box li {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rewards-box li::before {
+  content: "•";
+  color: var(--gold-color);
+  font-size: 1.2rem;
+}
+
+.countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: var(--spacing-sm);
+}
+
+.timer {
+  font-size: 1.5rem;
   font-weight: bold;
-  margin-top: 12px;
-  color: #222;
-  font-size: 16px;
+  color: white;
+  margin-top: var(--spacing-xs);
+  font-family: "Orbitron", sans-serif;
 }
-.banktransfer-divider {
-  border-top: 1px solid #e2e8f0;
-  margin: 32px 0 18px 0;
+
+/* Divider */
+.bns-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+  margin: 2rem 0;
 }
-.banktransfer-section-title {
-  text-align: center;
-  font-size: 17px;
-  font-weight: 600;
-  color: #222;
+
+/* Footer */
+.bns-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
-.banktransfer-footer {
-  text-align: center;
-  background: #f1f5f9;
-  padding: 12px 0;
-  border-radius: 6px;
-  margin-top: 10px;
+
+.bns-payment-methods {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
 }
-.banktransfer-napas {
-  font-weight: bold;
-  color: #222;
-  margin-bottom: 2px;
+
+.bns-payment-logo {
+  height: 30px;
+  filter: grayscale(0.5);
+  transition: var(--transition);
 }
-@media (max-width: 700px) {
-  .banktransfer-container {
-    padding: 12px 2px;
+
+.bns-support {
+  font-size: 0.9rem;
+  color: rgba(240, 240, 240, 0.7);
+}
+
+/* Glitch Text Effect */
+.glitch-text {
+  position: relative;
+  animation: glitch 2s infinite;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  left: 2px;
+  text-shadow: -2px 0 var(--primary-color);
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: -2px;
+  text-shadow: -2px 0 var(--secondary-color);
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% {
+    clip: rect(31px, 9999px, 94px, 0);
   }
-  .banktransfer-grid {
+  10% {
+    clip: rect(112px, 9999px, 76px, 0);
+  }
+  20% {
+    clip: rect(85px, 9999px, 77px, 0);
+  }
+  30% {
+    clip: rect(27px, 9999px, 97px, 0);
+  }
+  40% {
+    clip: rect(64px, 9999px, 98px, 0);
+  }
+  50% {
+    clip: rect(61px, 9999px, 85px, 0);
+  }
+  60% {
+    clip: rect(99px, 9999px, 114px, 0);
+  }
+  70% {
+    clip: rect(34px, 9999px, 115px, 0);
+  }
+  80% {
+    clip: rect(98px, 9999px, 129px, 0);
+  }
+  90% {
+    clip: rect(43px, 9999px, 96px, 0);
+  }
+  100% {
+    clip: rect(82px, 9999px, 64px, 0);
+  }
+}
+
+@keyframes glitch-anim2 {
+  0% {
+    clip: rect(125px, 9999px, 162px, 0);
+  }
+  10% {
+    clip: rect(120px, 9999px, 147px, 0);
+  }
+  20% {
+    clip: rect(113px, 9999px, 171px, 0);
+  }
+  30% {
+    clip: rect(123px, 9999px, 153px, 0);
+  }
+  40% {
+    clip: rect(142px, 9999px, 158px, 0);
+  }
+  50% {
+    clip: rect(131px, 9999px, 162px, 0);
+  }
+  60% {
+    clip: rect(141px, 9999px, 154px, 0);
+  }
+  70% {
+    clip: rect(129px, 9999px, 155px, 0);
+  }
+  80% {
+    clip: rect(138px, 9999px, 151px, 0);
+  }
+  90% {
+    clip: rect(136px, 9999px, 157px, 0);
+  }
+  100% {
+    clip: rect(152px, 9999px, 140px, 0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .bns-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
-    margin-top: 24px;
   }
-  .banktransfer-left, .banktransfer-right {
-    padding: 12px;
+
+  .bns-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .bns-balance {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .bns-container {
+    padding: 1rem;
+  }
+
+  .bns-title-bar h2 {
+    font-size: 1.2rem;
+  }
+
+  .bns-logo h1 {
+    font-size: 1.5rem;
+  }
+
+  .bns-payment-methods {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }

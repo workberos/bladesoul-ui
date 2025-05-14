@@ -1,521 +1,679 @@
-/* Main layout and background */
-.home-page {
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --primary-color: #ff073a;
+  --secondary-color: #0ff0fc;
+  --accent-color: #7a04eb;
+  --success-color: #39ff14;
+  --warning-color: #ffbe0b;
+  --danger-color: #ff5400;
+  --text-color: #ffffff;
+  --dark-bg: #0a0a0a;
+  --card-bg: rgba(20, 20, 20, 0.8);
+  --card-hover: rgba(30, 30, 30, 0.9);
+  --border-color: rgba(255, 7, 58, 0.5);
+  --shadow: 0 0 15px rgba(255, 7, 58, 0.5);
+  --glow: 0 0 10px rgba(15, 240, 252, 0.7);
+  --transition: all 0.3s ease;
+  --border-radius: 5px;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+}
+
+/* Base Styles */
+body {
+  font-family: "Rajdhani", sans-serif;
+  background-color: var(--dark-bg);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
-  background-image: url('../../assets/images/homebg.jpg');
-  background-size: cover;
-  background-position: center;
+  background-image: radial-gradient(circle at 10% 20%, rgba(122, 4, 235, 0.1) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(255, 7, 58, 0.1) 0%, transparent 20%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.85));
   background-attachment: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
 }
 
-/* Login container with frosted glass effect */
-.dangnhap-container {
-  max-width: 450px;
-  width: 90%;
-  margin: 0 auto;
-  padding: 2.5rem;
-  background-color: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.text-primary {
+  color: var(--primary-color);
 }
 
-.dangnhap-container:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+.text-secondary {
+  color: var(--secondary-color);
 }
 
-/* Titles */
-.company-title {
-  text-align: center;
-  color: #1a237e;
-  font-size: 2.4rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  letter-spacing: 1px;
+.text-accent {
+  color: var(--accent-color);
 }
 
-.login-title {
-  text-align: center;
-  color: #455a64;
-  font-size: 1.2rem;
-  font-weight: 500;
-  margin-bottom: 2rem;
-  position: relative;
-  padding-bottom: 1rem;
+.text-success {
+  color: var(--success-color);
 }
 
-.login-title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(to right, #1a237e, #3949ab);
-  border-radius: 2px;
-}
-
-/* Form elements */
-.login-form {
-  margin-top: 2rem;
-}
-
-.form-group {
-  margin-bottom: 1.8rem;
-  position: relative;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #37474f;
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 0.3px;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 0.9rem 1rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  box-sizing: border-box;
-  transition: all 0.3s ease;
-  background-color: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
-}
-
-.form-group input:focus {
-  border-color: #3949ab;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(57, 73, 171, 0.1);
-}
-
-/* Password input with toggle icon */
-.input-password-group {
-  position: relative;
-}
-
-.password-icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #78909c;
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: color 0.2s ease;
-}
-
-.password-icon:hover {
-  color: #3949ab;
-}
-
-/* Remember me and forgot password row */
-.remember-forgot-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 0.75rem;
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  font-size: 0.9rem;
-  color: #546e7a;
-  cursor: pointer;
-}
-
-.remember-me input {
-  margin-right: 0.5rem;
-  width: auto;
-  cursor: pointer;
-}
-
-.forgot-password {
-  color: #3949ab;
-  font-size: 0.9rem;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.forgot-password:hover {
-  color: #1a237e;
-  text-decoration: underline;
-}
-
-/* reCAPTCHA container */
-.form-group:has(iframe) {
+/* Auth Container */
+.game-auth-container {
   display: flex;
   justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--spacing-md);
 }
 
-/* Button styles */
-.primary-button {
+.game-auth-card {
   width: 100%;
-  padding: 1rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  position: relative;
+  max-width: 500px;
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
   overflow: hidden;
-  z-index: 1;
-  transition: all 0.4s ease;
-  background: linear-gradient(135deg, #3949ab, #1a237e);
-  box-shadow: 0 4px 15px rgba(57, 73, 171, 0.3);
+  position: relative;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
 }
 
-.primary-button::before {
-  content: '';
+.game-auth-card::before {
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #1a237e, #3949ab);
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  z-index: 1;
 }
 
-.primary-button::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -60%;
-  width: 20%;
-  height: 200%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: rotate(30deg);
-  transition: all 0.6s ease;
-}
-
-.primary-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(57, 73, 171, 0.4);
-}
-
-.primary-button:hover::before {
-  opacity: 1;
-}
-
-.primary-button:hover::after {
-  left: 120%;
-  transition-delay: 0.1s;
-}
-
-.primary-button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 10px rgba(57, 73, 171, 0.4);
-}
-
-.primary-button:disabled {
-  background: linear-gradient(135deg, #9fa8da, #7986cb);
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.primary-button:focus {
-  outline: none;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(57, 73, 171, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(57, 73, 171, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(57, 73, 171, 0);
-  }
-}
-
-/* Registration link */
-.register-link {
+.game-logo {
   text-align: center;
-  margin-top: 2rem;
-  color: #546e7a;
-  font-size: 0.95rem;
+  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
+  position: relative;
 }
 
-.register-link a {
-  color: #3949ab;
-  text-decoration: none;
+.game-logo h1 {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  margin: 0;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 10px rgba(255, 7, 58, 0.3);
+  letter-spacing: 1px;
+}
+
+.game-auth-content {
+  padding: var(--spacing-md) var(--spacing-xl) var(--spacing-xl);
+}
+
+.game-auth-title {
+  font-family: "Orbitron", sans-serif;
   font-weight: 600;
-  transition: color 0.2s ease;
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.register-link a:hover {
-  color: #1a237e;
+/* Form Styles */
+.game-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.form-field {
+  position: relative;
+  margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.game-input {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+  color: var(--text-color);
+  font-family: "Rajdhani", sans-serif;
+  font-size: 1rem;
+  transition: var(--transition);
+  outline: none;
+  z-index: 1;
+}
+
+.game-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.game-input.error {
+  border-color: var(--danger-color);
+  box-shadow: 0 0 0 1px var(--danger-color);
+}
+
+.input-border {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  transition: var(--transition);
+  z-index: 2;
+}
+
+.game-input:focus ~ .input-border {
+  width: 100%;
+}
+
+.password-toggle {
+  position: absolute;
+  right: var(--spacing-sm);
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  z-index: 2;
+  padding: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle:hover {
+  color: var(--text-color);
+}
+
+.error-message {
+  color: var(--danger-color);
+  font-size: 0.85rem;
+  margin-top: var(--spacing-xs);
+}
+
+/* Form Options */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.remember-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.game-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: relative;
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  margin-right: 8px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.remember-option:hover .checkmark {
+  border-color: var(--primary-color);
+}
+
+.game-checkbox:checked ~ .checkmark {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.game-checkbox:checked ~ .checkmark:after {
+  display: block;
+  left: 6px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.forgot-link {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.forgot-link:hover {
   text-decoration: underline;
 }
 
-/* Error messages */
-.signin-error {
-  color: #d32f2f;
-  font-size: 0.9rem;
-  margin-top: 1rem;
-  text-align: center;
-  background-color: rgba(211, 47, 47, 0.1);
-  padding: 0.5rem;
-  border-radius: 4px;
-  border-left: 3px solid #d32f2f;
+/* Buttons */
+.game-button {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: none;
+  border-radius: var(--border-radius);
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Forgot Password Modal */
-.signin-forgot-password-modal-overlay {
+.game-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.game-button:hover::before {
+  left: 100%;
+}
+
+.primary-button {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  box-shadow: 0 0 10px rgba(255, 7, 58, 0.5);
+}
+
+.primary-button:hover {
+  background-color: #ff2954;
+  box-shadow: 0 0 15px rgba(255, 7, 58, 0.7);
+}
+
+.secondary-button {
+  background-color: var(--secondary-color);
+  color: #000;
+  box-shadow: 0 0 10px rgba(15, 240, 252, 0.5);
+}
+
+.secondary-button:hover {
+  background-color: #4ff4ff;
+  box-shadow: 0 0 15px rgba(15, 240, 252, 0.7);
+}
+
+.accent-button {
+  background-color: var(--accent-color);
+  color: var(--text-color);
+  box-shadow: 0 0 10px rgba(122, 4, 235, 0.5);
+}
+
+.accent-button:hover {
+  background-color: #9331f4;
+  box-shadow: 0 0 15px rgba(122, 4, 235, 0.7);
+}
+
+.outline-button {
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.outline-button:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.game-button:disabled,
+.game-button.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.game-button:disabled::before,
+.game-button.disabled::before {
+  display: none;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--text-color);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Auth Footer */
+.auth-footer {
+  margin-top: var(--spacing-xl);
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.register-link,
+.login-link {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link:hover,
+.login-link:hover {
+  text-decoration: underline;
+}
+
+/* Modal Styles */
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(5px);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.signin-forgot-password-modal {
-  background-color: white;
-  border-radius: 12px;
-  padding: 2rem;
+.game-modal {
   width: 90%;
-  max-width: 450px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
   position: relative;
-  animation: slideIn 0.4s ease;
+  border: 1px solid var(--border-color);
+  animation: modalFadeIn 0.3s ease;
 }
 
-@keyframes slideIn {
-  from { transform: translateY(-30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.forgot-password-header {
+.modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e0e0e0;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.forgot-password-title {
-  font-size: 1.5rem;
-  color: #1a237e;
-  margin: 0;
+.modal-title {
+  font-family: "Orbitron", sans-serif;
   font-weight: 600;
+  font-size: 1.3rem;
+  margin: 0;
+  text-transform: uppercase;
 }
 
-.change-password-close-button {
+.modal-close {
   background: none;
   border: none;
-  color: #78909c;
-  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
-  padding: 0.5rem;
+  font-size: 1.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: var(--spacing-xs);
   border-radius: 50%;
-  transition: all 0.2s ease;
+  transition: var(--transition);
 }
 
-.change-password-close-button:hover {
-  background-color: #f5f5f5;
-  color: #d32f2f;
+.modal-close:hover {
+  color: var(--text-color);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.forgot-password-form {
+.modal-content {
+  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--spacing-md);
 }
 
-.forgot-password-input-group {
-  position: relative;
+.modal-actions {
   display: flex;
-  gap: 0.5rem;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
 }
 
-.forgot-password-input {
+/* OTP Section */
+.otp-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+}
+
+.otp-verify {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.otp-input {
   flex: 1;
-  padding: 0.9rem 1rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  background-color: #f9f9f9;
-  transition: all 0.3s ease;
 }
 
-.forgot-password-input:focus {
-  border-color: #3949ab;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(57, 73, 171, 0.1);
-  background-color: white;
-}
-
-.forgot-password-otp-button {
-  padding: 10px 1rem;
-  background: linear-gradient(135deg, #3949ab, #1a237e);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  min-width: 100px;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-}
-
-.forgot-password-otp-button:hover {
-  background: linear-gradient(135deg, #1a237e, #3949ab);
-  box-shadow: 0 4px 8px rgba(57, 73, 171, 0.2);
-}
-
-.forgot-password-otp-button:disabled {
-  background: #b0bec5;
-  cursor: not-allowed;
-}
-
-.forgot-password-verified-badge {
+.verified-badge {
   display: flex;
   align-items: center;
-  color: #4caf50;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
+  color: var(--success-color);
   font-weight: 500;
-  padding: 0.5rem;
-  background-color: rgba(76, 175, 80, 0.1);
-  border-radius: 4px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: rgba(57, 255, 20, 0.1);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(57, 255, 20, 0.3);
 }
 
-.forgot-password-password-toggle {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+/* Verification Code Inputs */
+.verification-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md) 0;
+}
+
+.verification-code-inputs {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.code-input-wrapper {
+  position: relative;
+  width: 50px;
+}
+
+.code-input {
+  width: 100%;
+  height: 60px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: "Orbitron", sans-serif;
+  padding: 0;
+  border-radius: var(--border-radius);
+}
+
+.verification-button {
+  width: 100%;
+  max-width: 200px;
+}
+
+.resend-code {
   background: none;
   border: none;
-  color: #78909c;
+  color: var(--secondary-color);
   cursor: pointer;
-  display: flex;
-  padding: 0;
-  transition: color 0.2s ease;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  margin-top: var(--spacing-sm);
+  transition: var(--transition);
 }
 
-.forgot-password-password-toggle:hover {
-  color: #3949ab;
+.resend-code:hover:not(.disabled) {
+  color: #4ff4ff;
 }
 
-.forgot-password-captcha {
-  display: flex;
-  justify-content: center;
-}
-
-.forgot-password-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.forgot-password-cancel-button {
-  flex: 1;
-  padding: 0.9rem;
-  background-color: #eceff1;
-  color: #546e7a;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.forgot-password-cancel-button:hover {
-  background-color: #cfd8dc;
-}
-
-.forgot-password-submit-button {
-  flex: 1;
-  padding: 0.9rem;
-  background: linear-gradient(135deg, #3949ab, #1a237e);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.forgot-password-submit-button:hover {
-  background: linear-gradient(135deg, #1a237e, #3949ab);
-  box-shadow: 0 4px 8px rgba(57, 73, 171, 0.2);
-}
-
-.forgot-password-submit-button:disabled {
-  background: #b0bec5;
+.resend-code.disabled {
+  color: rgba(255, 255, 255, 0.5);
   cursor: not-allowed;
+  text-decoration: none;
 }
 
-/* Loading spinner */
-.loading-spinner {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: white;
-  animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Responsive adjustments */
-@media (max-width: 480px) {
-  .dangnhap-container {
-    padding: 1.5rem;
-  }
-  
-  .company-title {
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+  .game-logo h1 {
     font-size: 2rem;
   }
-  
-  .forgot-password-input-group {
-    flex-direction: column;
+
+  .game-auth-title {
+    font-size: 1.3rem;
   }
-  
-  .forgot-password-otp-button {
+
+  .game-auth-content {
+    padding: var(--spacing-md);
+  }
+
+  .form-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .code-input-wrapper {
+    width: 40px;
+  }
+
+  .code-input {
+    height: 50px;
+    font-size: 1.2rem;
+  }
+
+  .otp-verify {
+    flex-direction: column;
     width: 100%;
   }
-  
-  .forgot-password-actions {
-    flex-direction: column;
+
+  .otp-verify .game-button {
+    width: 100%;
   }
+}
+
+/* Animations */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(15, 240, 252, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(15, 240, 252, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(15, 240, 252, 0.5);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Additional Cyberpunk Elements */
+.game-auth-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--secondary-color), transparent);
+}
+
+.game-logo::before,
+.game-logo::after {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary-color));
+  bottom: 0;
+}
+
+.game-logo::before {
+  left: 25%;
+  transform: translateX(-50%);
+}
+
+.game-logo::after {
+  right: 25%;
+  transform: translateX(50%);
+  background: linear-gradient(90deg, var(--secondary-color), transparent);
 }

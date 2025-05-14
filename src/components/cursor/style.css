@@ -1,0 +1,111 @@
+/* Base cursor styles */
+.game-cursor,
+.game-cursor-trail,
+.game-cursor-outer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  mix-blend-mode: difference;
+}
+
+.game-cursor.visible,
+.game-cursor-trail.visible,
+.game-cursor-outer.visible {
+  opacity: 1;
+}
+
+/* Main cursor dot */
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #ffcc00;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+  transform: translate(-50%, -50%);
+}
+
+/* Trailing cursor ring */
+.cursor-ring {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #ffcc00;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease;
+}
+
+/* Outer ring with more delay */
+.cursor-outer-ring {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 204, 0, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Pointer cursor (for clickable elements) */
+.cursor-pointer {
+  width: 40px;
+  height: 40px;
+  color: #ff073a;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%) rotate(45deg);
+  filter: drop-shadow(0 0 5px rgba(255, 7, 58, 0.8));
+  transition: transform 0.2s ease;
+}
+
+/* Clicking state */
+.game-cursor.clicking .cursor-dot {
+  background-color: #ff073a;
+  box-shadow: 0 0 15px rgba(255, 7, 58, 0.8);
+  transform: translate(-50%, -50%) scale(1.5);
+}
+
+.game-cursor-trail.clicking .cursor-ring {
+  border-color: #ff073a;
+  transform: translate(-50%, -50%) scale(0.8);
+}
+
+.game-cursor-trail.clicking .cursor-pointer {
+  color: #ffcc00;
+  transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
+}
+
+.game-cursor-outer.clicking .cursor-outer-ring {
+  border-color: rgba(255, 7, 58, 0.5);
+  transform: translate(-50%, -50%) scale(0.8);
+}
+
+/* Pointer state */
+.game-cursor-trail.pointer .cursor-ring {
+  width: 32px;
+  height: 32px;
+  border-color: #ff073a;
+}
+
+/* Animation for the outer ring */
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.3;
+  }
+}
+
+.cursor-outer-ring {
+  animation: pulse 2s infinite ease-in-out;
+}

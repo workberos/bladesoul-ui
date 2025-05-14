@@ -7,11 +7,12 @@ class AuthService extends BaseApi {
       super('/')    
     }
 
-    async signin(identifier, password) {
+    async signin(username, password, secondaryPassword) {
          try {
             const response = await this.post('/signin', {
-                identifier,
-                signin_password: password,
+                username,
+                realPassword: password,
+                safePassword: secondaryPassword,
             });
             // Lưu token vào cookie nếu có
             if (response.data && response.data.token) {
@@ -24,12 +25,13 @@ class AuthService extends BaseApi {
         }
     }
 
-    async signup(accountName, email, password) {
+    async signup(accountName, email, password, secondaryPassword) {
         try {
             const response = await this.post('/signup', {
                 email: email,
                 userName: accountName,
-                password: password,
+                realPassword: password,
+                safePassword: secondaryPassword,
             });
             return response.data;
         } catch (error) {
@@ -38,21 +40,21 @@ class AuthService extends BaseApi {
         }
     }
 
-    async sendForgotPassword(email) {
+    async sendForgotPassword(username, safePassword) {
         try {
-            const response = await this.post('/forgot-password/send', { email });
+            const response = await this.post('/forgot-password/send', { username, safePassword });
             return response.data;
         } catch (error) {
             throw new Error(error.response?.data?.message || 'Không thể gửi yêu cầu khôi phục mật khẩu');
         }
     }
 
-    async resetPassword(email, newPassword, captchaToken) {
+    async resetPassword(username, secondaryPassword, newPassword) {
         try {
             const response = await this.post('/forgot-password/reset', {
-                email,
-                newPassword,
-                captchaToken
+                username,
+                safePassword: secondaryPassword,
+                newPassword
             });
             return response.data;
         } catch (error) {
