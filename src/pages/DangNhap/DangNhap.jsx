@@ -1,11 +1,10 @@
-import { useReducer, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import authService from "../../services/authService";
-import mailService from "../../services/mailService";
-import ReCAPTCHA from "react-google-recaptcha";
-import { FaEye, FaEyeSlash, FaCheckCircle, FaTimes } from "react-icons/fa";
-import { toast } from "react-toastify";
-import "./style.css";
+/* eslint-disable no-unused-vars */
+import { useReducer, useEffect } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { FaEye, FaEyeSlash, FaCheckCircle, FaTimes } from "react-icons/fa"
+import { toast } from "react-toastify"
+import authService from "../../services/authService"
+import mailService from "../../services/mailService"
 import {
   initialState,
   reducer,
@@ -18,393 +17,276 @@ import {
   setCooldown,
   setSendingOTP,
   resetResetForm,
-} from "../../reducers/dangNhapReducer";
+} from "../../reducers/dangNhapReducer"
+import "./style.css"
 
-const DangNhap = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const navigate = useNavigate();
+export default function Login() {
+  const [state, dispatch] = useReducer(reducer, initialState)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const token = document.cookie
       .split("; ")
       .find((row) => row.startsWith("authToken="))
-      ?.split("=")[1];
+      ?.split("=")[1]
     if (token) {
-      navigate("/");
+      navigate("/")
     }
-  }, [navigate]);
+  }, [navigate])
 
   // Cooldown for OTP
   useEffect(() => {
-    let timer;
+    let timer
     if (state.cooldown > 0) {
       timer = setInterval(() => {
-        dispatch(setCooldown(state.cooldown - 1));
-      }, 1000);
+        dispatch(setCooldown(state.cooldown - 1))
+      }, 1000)
     }
-    return () => clearInterval(timer);
-  }, [state.cooldown]);
+    return () => clearInterval(timer)
+  }, [state.cooldown])
 
-  // Đăng nhập
+  // Login handler
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    dispatch(setError(null));
-    dispatch(setSubmitting(true));
+    e.preventDefault()
+    dispatch(setError(null))
+    dispatch(setSubmitting(true))
     try {
-      const data = await authService.signin(state.email, state.password);
-      document.cookie = `authToken=${data.token}; path=/`;
+      const data = await authService.signin(state.username, state.password)
+      document.cookie = `authToken=${data.token}; path=/`
       if (state.rememberMe) {
         localStorage.setItem(
           "rememberMe",
-          JSON.stringify({ email: state.email, password: state.password })
-        );
+          JSON.stringify({
+            userName: state.username,
+            password: state.password,
+          }),
+        )
       } else {
-        localStorage.removeItem("rememberMe");
+        localStorage.removeItem("rememberMe")
       }
-      toast.success("Đăng nhập thành công!");
-      navigate("/");
+      toast.success("Đăng nhập thành công!")
+      navigate("/")
     } catch (err) {
-      const msg = err.response?.data?.message || "Đăng nhập thất bại!";
-      dispatch(setError(msg));
-      toast.error(msg);
+      const msg = err.response?.data?.message || "Đăng nhập thất bại!"
+      dispatch(setError(msg))
+      toast.error(msg)
     } finally {
-      dispatch(setSubmitting(false));
+      dispatch(setSubmitting(false))
     }
-  };
+  }
 
-  // Hiện/ẩn mật khẩu
-  const handleTogglePasswordVisibility = () => {
-    dispatch(setField("showPassword", !state.showPassword));
-  };
-
-  // Gửi email quên mật khẩu
+  // Send password reset email
   const handleSendForgotPassword = async () => {
-    dispatch(setSendingOTP(true));
-    if (!state.resetEmail) {
-      dispatch(setError("Vui lòng nhập email!"));
-      dispatch(setSendingOTP(false));
-      return;
+    dispatch(setSendingOTP(true))
+    if (!state.resetUsername) {
+      dispatch(setError("Vui lòng nhập tên đăng nhập!"))
+      dispatch(setSendingOTP(false))
+      return
     }
     try {
-      await authService.sendForgotPassword(state.resetEmail);
-      dispatch(setOTPSent(true));
-      dispatch(setError(null));
-      dispatch(setCooldown(60));
-      toast.success("Đã gửi email khôi phục mật khẩu thành công!");
+      await authService.sendForgotPassword(state.resetUsername)
+      dispatch(setOTPSent(true))
+      dispatch(setError(null))
+      dispatch(setCooldown(60))
+      toast.success("Đã gửi khôi phục mật khẩu thành công!")
     } catch (err) {
-      dispatch(setError("Không thể gửi email khôi phục mật khẩu!"));
-      toast.error("Không thể gửi email khôi phục mật khẩu!");
+      dispatch(setError("Không thể gửi khôi phục mật khẩu!"))
+      toast.error("Không thể gửi khôi phục mật khẩu!")
     } finally {
-      dispatch(setSendingOTP(false));
+      dispatch(setSendingOTP(false))
     }
-  };
+  }
 
-  // Xác thực OTP
-  const handleVerifyOTP = async () => {
-    try {
-      const result = await mailService.verifyCode(
-        state.resetEmail,
-        state.resetOTP
-      );
-      if (result.success) {
-        dispatch(setOTPVerified(true));
-        dispatch(setError(null));
-        toast.success("Xác thực OTP thành công!");
-      } else {
-        dispatch(setError("Mã OTP không chính xác!"));
-        toast.error("Mã OTP không chính xác!");
-      }
-    } catch (err) {
-      dispatch(setError("Mã OTP không chính xác hoặc đã hết hạn!"));
-      toast.error("Mã OTP không chính xác hoặc đã hết hạn!");
-    }
-  };
-
-  // Đặt lại mật khẩu
+  // Reset password
   const handleResetPassword = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!state.isOTPVerified) {
-      dispatch(setError("Vui lòng xác thực OTP trước!"));
-      toast.error("Vui lòng xác thực OTP trước!");
-      return;
+      dispatch(setError("Vui lòng xác thực OTP trước!"))
+      toast.error("Vui lòng xác thực OTP trước!")
+      return
     }
-    if (!state.captchaToken) {
-      dispatch(setError("Vui lòng xác nhận captcha!"));
-      toast.error("Vui lòng xác nhận captcha!");
-      return;
+    if (!state.resetSecondaryPassword) {
+      dispatch(setError("Vui lòng nhập mật khẩu cấp 2!"))
+      toast.error("Vui lòng nhập mật khẩu cấp 2!")
+      return
     }
     if (state.newPassword !== state.confirmNewPassword) {
-      dispatch(setError("Mật khẩu mới và xác nhận mật khẩu không khớp!"));
-      toast.error("Mật khẩu mới và xác nhận mật khẩu không khớp!");
-      return;
+      dispatch(setError("Mật khẩu mới và xác nhận mật khẩu không khớp!"))
+      toast.error("Mật khẩu mới và xác nhận mật khẩu không khớp!")
+      return
     }
     if (state.newPassword.length < 6) {
-      dispatch(setError("Mật khẩu mới phải có ít nhất 6 ký tự!"));
-      toast.error("Mật khẩu mới phải có ít nhất 6 ký tự!");
-      return;
+      dispatch(setError("Mật khẩu mới phải có ít nhất 6 ký tự!"))
+      toast.error("Mật khẩu mới phải có ít nhất 6 ký tự!")
+      return
     }
-    dispatch(setSubmitting(true));
+    dispatch(setSubmitting(true))
     try {
-      await mailService.resetPassword(
-        state.resetEmail,
-        state.newPassword,
-        state.captchaToken
-      );
-      dispatch(setResetModal(false));
-      dispatch(resetResetForm());
-      toast.success("Đặt lại mật khẩu thành công!");
+      await authService.resetPassword(state.resetUsername, state.resetSecondaryPassword, state.newPassword)
+      dispatch(setResetModal(false))
+      dispatch(resetResetForm())
+      toast.success("Đặt lại mật khẩu thành công!")
     } catch (err) {
-      dispatch(setError("Đặt lại mật khẩu thất bại!"));
-      toast.error("Đặt lại mật khẩu thất bại!");
+      dispatch(setError("Đặt lại mật khẩu thất bại!"))
+      toast.error("Đặt lại mật khẩu thất bại!")
     } finally {
-      dispatch(setSubmitting(false));
+      dispatch(setSubmitting(false))
     }
-  };
+  }
 
   const handleCloseResetModal = () => {
-    dispatch(setResetModal(false));
-    dispatch(resetResetForm());
-  };
+    dispatch(setResetModal(false))
+    dispatch(resetResetForm())
+  }
 
   return (
-    <div className="home-page">
-      <div className="dangnhap-container">
-        <h1 className="company-title">Blade & Soul</h1>
-        <h2 className="login-title">Đăng nhập hệ thống</h2>
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              placeholder="Vui lòng nhập địa chỉ email"
-              value={state.email}
-              onChange={(e) => dispatch(setField("email", e.target.value))}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Mật khẩu</label>
-            <div className="input-password-group">
-              <input
-                type={state.showPassword ? "text" : "password"}
-                placeholder="Nhập mật khẩu"
-                value={state.password}
-                onChange={(e) => dispatch(setField("password", e.target.value))}
-                required
-              />
-              <span
-                className="password-icon"
-                onClick={handleTogglePasswordVisibility}
-              >
-                {state.showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
+    <div className="game-auth-container">
+      <div className="game-auth-card">
+        <div className="game-logo">
+          <h1>Blade & Soul</h1>
+        </div>
+
+        <div className="game-auth-content">
+          <h2 className="game-auth-title">
+            <span className="text-primary">Đăng nhập</span> hệ thống
+          </h2>
+
+          <form onSubmit={handleSubmit} className="game-auth-form">
+            <div className="form-field">
+              <label className="form-label">Tên đăng nhập</label>
+              <div className="input-wrapper">
+                <input
+                  type="text"
+                  placeholder="Vui lòng nhập tên đăng nhập"
+                  value={state.username}
+                  onChange={(e) => dispatch(setField("username", e.target.value))}
+                  required
+                  className="game-input"
+                />
+                <div className="input-border"></div>
+              </div>
             </div>
-            <div className="remember-forgot-row">
-              <label className="remember-me">
+
+            <div className="form-field">
+              <label className="form-label">Mật khẩu</label>
+              <div className="input-wrapper">
+                <input
+                  type={state.showPassword ? "text" : "password"}
+                  placeholder="Nhập mật khẩu"
+                  value={state.password}
+                  onChange={(e) => dispatch(setField("password", e.target.value))}
+                  required
+                  className="game-input"
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => dispatch(setField("showPassword", !state.showPassword))}
+                >
+                  {state.showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+                <div className="input-border"></div>
+              </div>
+            </div>
+
+            <div className="form-options">
+              <label className="remember-option">
                 <input
                   type="checkbox"
                   checked={state.rememberMe}
-                  onChange={(e) =>
-                    dispatch(setField("rememberMe", e.target.checked))
-                  }
+                  onChange={(e) => dispatch(setField("rememberMe", e.target.checked))}
+                  className="game-checkbox"
                 />
-                Ghi nhớ đăng nhập
+                <span className="checkmark"></span>
+                <span>Ghi nhớ đăng nhập</span>
               </label>
-              <Link
-                to="#"
-                className="forgot-password"
-                onClick={() => dispatch(setResetModal(true))}
-              >
+              <button type="button" className="forgot-link" onClick={() => dispatch(setResetModal(true))}>
                 Quên mật khẩu?
-              </Link>
+              </button>
             </div>
+
+            {state.error && <div className="error-message">{state.error}</div>}
+
+            <button type="submit" className="game-button primary-button" disabled={state.isSubmitting}>
+              {state.isSubmitting ? <span className="loading-spinner"></span> : "Đăng nhập"}
+            </button>
+          </form>
+
+          <div className="auth-footer">
+            <p>
+              Bạn chưa có tài khoản?
+              <Link to="/dang-ky" className="register-link">
+                <span className="text-secondary"> Tạo tài khoản</span>
+              </Link>
+            </p>
           </div>
-          <div className="form-group">
-            <ReCAPTCHA
-              sitekey="6LeJMI4qAAAAAMl3NjToCLJmx7uwGohGpVt7DDJ7"
-              onChange={(token) => dispatch(setField("captchaToken", token))}
-            />
-          </div>
-          <button
-            type="submit"
-            className="primary-button"
-            disabled={state.isSubmitting || !state.captchaToken}
-          >
-            {state.isSubmitting ? "Đang xử lý..." : "Đăng nhập"}
-          </button>
-          {state.error && <p className="signin-error">{state.error}</p>}
-        </form>
-        <p className="register-link">
-          Bạn chưa có tài khoản? <Link to="/dang-ky">Tạo tài khoản</Link>
-        </p>
+        </div>
       </div>
-      {/* Modal Quên Mật Khẩu */}
+
+      {/* Reset Password Modal */}
       {state.isResetPasswordModalOpen && (
-        <div className="signin-forgot-password-modal-overlay">
-          <div className="signin-forgot-password-modal">
-            <div className="forgot-password-header">
-              <h2 className="forgot-password-title">Quên Mật Khẩu</h2>
-              <button
-                className="change-password-close-button"
-                onClick={handleCloseResetModal}
-              >
+        <div className="modal-overlay">
+          <div className="game-modal">
+            <div className="modal-header">
+              <h3 className="modal-title">
+                <span className="text-primary">Quên</span> Mật Khẩu
+              </h3>
+              <button className="modal-close" onClick={handleCloseResetModal}>
                 <FaTimes />
               </button>
             </div>
-            <form
-              onSubmit={handleResetPassword}
-              className="forgot-password-form"
-            >
-              <div className="forgot-password-input-group">
-                <input
-                  type="email"
-                  className="forgot-password-input"
-                  placeholder="Nhập email của bạn"
-                  value={state.resetEmail}
-                  onChange={(e) =>
-                    dispatch(setField("resetEmail", e.target.value))
-                  }
-                  disabled={state.isOTPSent}
-                  required
-                />
+
+            <form onSubmit={handleResetPassword} className="modal-content">
+              <div className="form-field">
+                <label className="form-label">Tên đăng nhập</label>
+                <div className="input-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Nhập tên đăng nhập của bạn"
+                    value={state.resetUsername}
+                    onChange={(e) => dispatch(setField("resetUsername", e.target.value))}
+                    disabled={state.isOTPSent}
+                    required
+                    className="game-input"
+                  />
+                  <div className="input-border"></div>
+                </div>
               </div>
-              <div className="forgot-password-otp-section">
+
+              <div className="otp-section">
                 <button
                   type="button"
-                  className="forgot-password-otp-button"
+                  className={`game-button ${state.cooldown > 0 ? "disabled" : "secondary-button"}`}
                   onClick={handleSendForgotPassword}
-                  disabled={
-                    state.cooldown > 0 ||
-                    state.isOTPVerified ||
-                    !state.resetEmail
-                  }
+                  disabled={state.cooldown > 0 || !state.resetUsername}
                 >
                   {state.isSendingOTP ? (
                     <span className="loading-spinner"></span>
                   ) : state.cooldown > 0 ? (
                     `Gửi lại (${state.cooldown}s)`
                   ) : (
-                    "Gửi email khôi phục"
+                    "Gửi khôi phục"
                   )}
                 </button>
-                {state.isOTPSent && !state.isOTPVerified && (
-                  <div className="forgot-password-input-group">
-                    <input
-                      type="text"
-                      className="forgot-password-input"
-                      placeholder="Nhập mã OTP"
-                      value={state.resetOTP}
-                      onChange={(e) =>
-                        dispatch(setField("resetOTP", e.target.value))
-                      }
-                      maxLength={6}
-                    />
-                    <button
-                      type="button"
-                      className="forgot-password-otp-button"
-                      onClick={handleVerifyOTP}
-                      disabled={state.resetOTP.length !== 6}
-                    >
-                      Xác nhận OTP
-                    </button>
-                  </div>
-                )}
-                {state.isOTPVerified && (
-                  <div className="forgot-password-verified-badge">
-                    <FaCheckCircle /> Xác thực thành công
-                  </div>
-                )}
               </div>
-              {state.isOTPVerified && (
-                <>
-                  <div className="forgot-password-input-group">
-                    <input
-                      type={state.showNewPassword ? "text" : "password"}
-                      className="forgot-password-input"
-                      placeholder="Mật khẩu mới"
-                      value={state.newPassword}
-                      onChange={(e) =>
-                        dispatch(setField("newPassword", e.target.value))
-                      }
-                      required
-                    />
-                    <button
-                      type="button"
-                      className="forgot-password-password-toggle"
-                      onClick={() =>
-                        dispatch(
-                          setField("showNewPassword", !state.showNewPassword)
-                        )
-                      }
-                    >
-                      {state.showNewPassword ? <FaEyeSlash /> : <FaEye />}
-                    </button>
-                  </div>
-                  <div className="forgot-password-input-group">
-                    <input
-                      type={state.showConfirmNewPassword ? "text" : "password"}
-                      className="forgot-password-input"
-                      placeholder="Xác nhận mật khẩu mới"
-                      value={state.confirmNewPassword}
-                      onChange={(e) =>
-                        dispatch(setField("confirmNewPassword", e.target.value))
-                      }
-                      required
-                    />
-                    <button
-                      type="button"
-                      className="forgot-password-password-toggle"
-                      onClick={() =>
-                        dispatch(
-                          setField(
-                            "showConfirmNewPassword",
-                            !state.showConfirmNewPassword
-                          )
-                        )
-                      }
-                    >
-                      {state.showConfirmNewPassword ? (
-                        <FaEyeSlash />
-                      ) : (
-                        <FaEye />
-                      )}
-                    </button>
-                  </div>
-                  <div className="forgot-password-captcha">
-                    <ReCAPTCHA
-                      sitekey="6LeJMI4qAAAAAMl3NjToCLJmx7uwGohGpVt7DDJ7"
-                      onChange={(token) =>
-                        dispatch(setField("captchaToken", token))
-                      }
-                    />
-                  </div>
-                </>
-              )}
-              <div className="forgot-password-actions">
-                <button
-                  type="button"
-                  className="forgot-password-cancel-button"
-                  onClick={handleCloseResetModal}
-                >
+
+              {state.error && <div className="error-message">{state.error}</div>}
+
+              <div className="modal-actions">
+                <button type="button" className="game-button outline-button" onClick={handleCloseResetModal}>
                   Hủy
                 </button>
+
                 {state.isOTPVerified && (
-                  <button
-                    type="submit"
-                    className="forgot-password-submit-button"
-                    disabled={state.isSubmitting || !state.captchaToken}
-                  >
-                    {state.isSubmitting ? "Đang xử lý..." : "Xác nhận"}
+                  <button type="submit" className="game-button primary-button" disabled={state.isSubmitting}>
+                    {state.isSubmitting ? <span className="loading-spinner"></span> : "Xác nhận"}
                   </button>
                 )}
               </div>
-              {state.error && <p className="signin-error">{state.error}</p>}
             </form>
           </div>
         </div>
       )}
     </div>
-  );
-};
-
-export default DangNhap;
+  )
+}

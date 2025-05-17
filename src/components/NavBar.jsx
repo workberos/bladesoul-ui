@@ -3,7 +3,7 @@ import '../assets/css/Navbar.css'
 import { useState } from "react";
 
 const Navbar = () => {
-  const {isLoggin, setIsLoggin} = useState(false);
+  const {isLoggin} = useState(false);
   return (
     <nav className="game-navbar">
       <div className="navbar-brand">

@@ -1,22 +1,24 @@
 export const initialState = {
-    email: '',
+    username: '',
     password: '',
+    secondaryPassword: '',
     showPassword: false,
+    showSecondaryPassword: false,
     rememberMe: false,
     error: null,
     isSubmitting: false,
-    captchaToken: null,
     isResetPasswordModalOpen: false,
-    resetEmail: '',
+    resetUsername: '',
     resetOTP: '',
     isOTPSent: false,
     isOTPVerified: false,
     newPassword: '',
-    confirmNewPassword: false,
+    resetSecondaryPassword: '',
+    confirmNewPassword: '',
     showNewPassword: false,
     showConfirmNewPassword: false,
     cooldown: 0,
-    isSendingOTP: false
+    isSendingOTP: false,
 };
 
 export function reducer(state, action) {

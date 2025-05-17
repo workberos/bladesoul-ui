@@ -8,10 +8,14 @@ import HoTro from './pages/HoTro/HoTro';
 import DangKy from './pages/DangKy/DangKy';
 import DangNhap from './pages/DangNhap/DangNhap';
 import Navbar from './components/NavBar';
+import CustomCursor from './components/cursor/CustomCursor';
+import IntroScreen from './components/nitro/nitro-effect';
 
 function App() {
   return (
     <Router>
+      <IntroScreen />
+      <CustomCursor />
       <div className="app">
         <Navbar />
         <ToastContainer
