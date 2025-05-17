@@ -7,12 +7,11 @@ class AuthService extends BaseApi {
       super('/')    
     }
 
-    async signin(username, password, secondaryPassword) {
+    async signin(userName, password) {
          try {
             const response = await this.post('/signin', {
-                username,
-                realPassword: password,
-                safePassword: secondaryPassword,
+                userName,
+                password,
             });
             // Lưu token vào cookie nếu có
             if (response.data && response.data.token) {
@@ -25,12 +24,11 @@ class AuthService extends BaseApi {
         }
     }
 
-    async signup(accountName, email, password, secondaryPassword) {
+    async signup(accountName, password, secondaryPassword) {
         try {
             const response = await this.post('/signup', {
-                email: email,
                 userName: accountName,
-                realPassword: password,
+                password: password,
                 safePassword: secondaryPassword,
             });
             return response.data;

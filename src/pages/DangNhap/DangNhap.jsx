@@ -51,15 +51,14 @@ export default function Login() {
     dispatch(setError(null))
     dispatch(setSubmitting(true))
     try {
-      const data = await authService.signin(state.username, state.password, state.secondaryPassword)
+      const data = await authService.signin(state.username, state.password)
       document.cookie = `authToken=${data.token}; path=/`
       if (state.rememberMe) {
         localStorage.setItem(
           "rememberMe",
           JSON.stringify({
-            username: state.username,
+            userName: state.username,
             password: state.password,
-            secondaryPassword: state.secondaryPassword,
           }),
         )
       } else {
@@ -95,24 +94,6 @@ export default function Login() {
       toast.error("Không thể gửi khôi phục mật khẩu!")
     } finally {
       dispatch(setSendingOTP(false))
-    }
-  }
-
-  // Verify OTP
-  const handleVerifyOTP = async () => {
-    try {
-      const result = await mailService.verifyCode(state.resetUsername, state.resetOTP)
-      if (result.success) {
-        dispatch(setOTPVerified(true))
-        dispatch(setError(null))
-        toast.success("Xác thực OTP thành công!")
-      } else {
-        dispatch(setError("Mã OTP không chính xác!"))
-        toast.error("Mã OTP không chính xác!")
-      }
-    } catch (err) {
-      dispatch(setError("Mã OTP không chính xác hoặc đã hết hạn!"))
-      toast.error("Mã OTP không chính xác hoặc đã hết hạn!")
     }
   }
 
@@ -187,11 +168,11 @@ export default function Login() {
             </div>
 
             <div className="form-field">
-              <label className="form-label">Mật khẩu cấp 1</label>
+              <label className="form-label">Mật khẩu</label>
               <div className="input-wrapper">
                 <input
                   type={state.showPassword ? "text" : "password"}
-                  placeholder="Nhập mật khẩu cấp 1"
+                  placeholder="Nhập mật khẩu"
                   value={state.password}
                   onChange={(e) => dispatch(setField("password", e.target.value))}
                   required
@@ -203,28 +184,6 @@ export default function Login() {
                   onClick={() => dispatch(setField("showPassword", !state.showPassword))}
                 >
                   {state.showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-                <div className="input-border"></div>
-              </div>
-            </div>
-
-            <div className="form-field">
-              <label className="form-label">Mật khẩu cấp 2</label>
-              <div className="input-wrapper">
-                <input
-                  type={state.showSecondaryPassword ? "text" : "password"}
-                  placeholder="Nhập mật khẩu cấp 2"
-                  value={state.secondaryPassword}
-                  onChange={(e) => dispatch(setField("secondaryPassword", e.target.value))}
-                  required
-                  className="game-input"
-                />
-                <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() => dispatch(setField("showSecondaryPassword", !state.showSecondaryPassword))}
-                >
-                  {state.showSecondaryPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
                 <div className="input-border"></div>
               </div>
@@ -294,34 +253,12 @@ export default function Login() {
                 </div>
               </div>
 
-              <div className="form-field">
-                <label className="form-label">Mật khẩu cấp 2</label>
-                <div className="input-wrapper">
-                  <input
-                    type={state.showSecondaryPassword ? "text" : "password"}
-                    placeholder="Nhập mật khẩu cấp 2"
-                    value={state.resetSecondaryPassword}
-                    onChange={(e) => dispatch(setField("resetSecondaryPassword", e.target.value))}
-                    required
-                    className="game-input"
-                  />
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() => dispatch(setField("showSecondaryPassword", !state.showSecondaryPassword))}
-                  >
-                    {state.showSecondaryPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                  <div className="input-border"></div>
-                </div>
-              </div>
-
               <div className="otp-section">
                 <button
                   type="button"
                   className={`game-button ${state.cooldown > 0 ? "disabled" : "secondary-button"}`}
                   onClick={handleSendForgotPassword}
-                  disabled={state.cooldown > 0 || !state.resetUsername || !state.resetSecondaryPassword}
+                  disabled={state.cooldown > 0 || !state.resetUsername}
                 >
                   {state.isSendingOTP ? (
                     <span className="loading-spinner"></span>
@@ -331,86 +268,7 @@ export default function Login() {
                     "Gửi khôi phục"
                   )}
                 </button>
-
-                {state.isOTPSent && !state.isOTPVerified && (
-                  <div className="otp-verify">
-                    <div className="input-wrapper">
-                      <input
-                        type="text"
-                        className="game-input otp-input"
-                        placeholder="Nhập mã OTP"
-                        value={state.resetOTP}
-                        onChange={(e) => dispatch(setField("resetOTP", e.target.value))}
-                        maxLength={6}
-                      />
-                      <div className="input-border"></div>
-                    </div>
-                    <button
-                      type="button"
-                      className="game-button accent-button"
-                      onClick={handleVerifyOTP}
-                      disabled={state.resetOTP.length !== 6}
-                    >
-                      Xác nhận OTP
-                    </button>
-                  </div>
-                )}
-
-                {state.isOTPVerified && (
-                  <div className="verified-badge">
-                    <FaCheckCircle className="text-success" />
-                    <span>Xác thực thành công</span>
-                  </div>
-                )}
               </div>
-
-              {state.isOTPVerified && (
-                <>
-                  <div className="form-field">
-                    <label className="form-label">Mật khẩu mới</label>
-                    <div className="input-wrapper">
-                      <input
-                        type={state.showNewPassword ? "text" : "password"}
-                        placeholder="Nhập mật khẩu mới"
-                        value={state.newPassword}
-                        onChange={(e) => dispatch(setField("newPassword", e.target.value))}
-                        required
-                        className="game-input"
-                      />
-                      <button
-                        type="button"
-                        className="password-toggle"
-                        onClick={() => dispatch(setField("showNewPassword", !state.showNewPassword))}
-                      >
-                        {state.showNewPassword ? <FaEyeSlash /> : <FaEye />}
-                      </button>
-                      <div className="input-border"></div>
-                    </div>
-                  </div>
-
-                  <div className="form-field">
-                    <label className="form-label">Xác nhận mật khẩu mới</label>
-                    <div className="input-wrapper">
-                      <input
-                        type={state.showConfirmNewPassword ? "text" : "password"}
-                        placeholder="Xác nhận mật khẩu mới"
-                        value={state.confirmNewPassword}
-                        onChange={(e) => dispatch(setField("confirmNewPassword", e.target.value))}
-                        required
-                        className="game-input"
-                      />
-                      <button
-                        type="button"
-                        className="password-toggle"
-                        onClick={() => dispatch(setField("showConfirmNewPassword", !state.showConfirmNewPassword))}
-                      >
-                        {state.showConfirmNewPassword ? <FaEyeSlash /> : <FaEye />}
-                      </button>
-                      <div className="input-border"></div>
-                    </div>
-                  </div>
-                </>
-              )}
 
               {state.error && <div className="error-message">{state.error}</div>}
 
